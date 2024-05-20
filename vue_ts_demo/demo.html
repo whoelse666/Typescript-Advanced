@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<script>
+			// function fib(n) {
+			// 	if (n <= 1) return 1
+			// 	return fib(n - 1) + fib(n - 2)
+			// }
+			function fib(n) {
+				let arr = [1, 1]
+				let i = 2
+				while (i <= n) {
+					arr[i] = arr[i - 1] + arr[i - 2]
+					i++
+				}
+				return arr[n]
+			}
+			let count = fib(38)
+			console.log('count', count)
+
+			let timing = window.performance && window.performance.timing
+			let navigation = window.performance && window.performance.navigation
+
+			// DNS 解析：
+			let dns = timing.domainLookupEnd - timing.domainLookupStart
+
+			// 总体网络交互耗时：
+			let network = timing.responseEnd - timing.navigationStart
+
+			// 渲染处理：
+			let processing = (timing.domComplete || timing.domLoading) - timing.domLoading
+
+			// 可交互：
+			let active = timing.domInteractive - timing.navigationStart
+			// var a = {
+			// 	value: 1,
+			// 	valueOf: function () {
+			// 		console.log('this.value', this.value)
+			// 		return a.value++
+			// 	}
+			// }
+			// if (a == 1 && a == 2 && a == 3) {
+			// 	console.log('a')
+			// }
+			/* 	var a
+						console.log(a)
+						a = 20
+						document.addEventListener('DOMContentLoaded', (event) => {
+							console.log('first contentful painting', event.timeStamp)
+						}) */
+			// 方案二：window.performance.navigation('first-contentful-paint')[0].startTime
+
+			/* 	// 定义 Router
+						class Router {
+							constructor() {
+								this.routes = {} // 存放路由path及callback
+								this.currentUrl = ''
+
+								// 监听路由change调用相对应的路由回调
+								window.addEventListener('load', this.refresh, false)
+								window.addEventListener('hashchange', this.refresh, false)
+							}
+
+							route(path, callback) {
+								this.routes[path] = callback
+							}
+
+							push(path) {
+								this.routes[path] && this.routes[path]()
+							}
+						}
+
+						// 使用 router
+						window.miniRouter = new Router()
+						miniRouter.route('/', () => console.log('page1'))
+						miniRouter.route('/page2', () => console.log('page2'))
+
+						miniRouter.push('/') // page1
+						miniRouter.push('/page2') // page2 */
+
+			// 定义 Router
+			class Router {
+				constructor() {
+					this.routes = {}
+					this.listerPopState()
+				}
+
+				init(path) {
+					history.replaceState({ path: path }, null, path)
+					this.routes[path] && this.routes[path]()
+				}
+
+				route(path, callback) {
+					this.routes[path] = callback
+				}
+
+				push(path) {
+					history.pushState({ path: path }, null, path)
+					this.routes[path] && this.routes[path]()
+				}
+
+				listerPopState() {
+					window.addEventListener('popstate', (e) => {
+						const path = e.state && e.state.path
+						this.routers[path] && this.routers[path]()
+					})
+				}
+			}
+
+			// // 使用 Router
+
+			// window.miniRouter = new Router()
+			// miniRouter.route('/', () => console.log('page1'))
+			// miniRouter.route('/page2', () => console.log('page2'))
+
+			// // 跳转
+			// miniRouter.push('/page2') // page2
+		</script>
+	</body>
+</html>
