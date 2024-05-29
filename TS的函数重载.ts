@@ -4,11 +4,9 @@ interface ShowMessage {
   (text: string, mode: string, duration?: number): void;
   (text: string, duration?: number, onClose?: Function): void;
 }
-
 interface Utils {
   showMessage: ShowMessage;
 }
-
 const utils: Utils = {
   showMessage: (param1: string | object, param2?: string | number | Function, param3?: Function | number) => {}
 };
